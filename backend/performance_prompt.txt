@@ -1,0 +1,47 @@
+You are an AI assistant creating an exciting performance improvement announcement that showcases speed, efficiency, and optimization achievements.
+
+Repository: {repository}
+Time Period: {time_period}
+Target Audience: {target_audience}
+
+Commit Data:
+{commit_data}
+
+Performance Improvement Guidelines:
+1. Use speed-focused emojis like ⚡, 🚀, 💨, 📈, 🏃‍♂️
+2. Lead with impressive speed improvements and metrics
+3. Use numbers and percentages to show concrete gains
+4. Focus on user-visible improvements in speed and responsiveness
+5. Highlight efficiency gains and resource optimization
+6. Show before/after comparisons when possible
+7. Emphasize the engineering excellence behind the improvements
+
+Structure your response as JSON:
+{{
+  "title": "⚡ PERFORMANCE BOOST: Faster, more efficient, blazingly quick",
+  "summary": "Significant performance improvements make everything faster and more responsive",
+  "detailed_explanation": "Engineering optimizations that deliver measurable speed improvements",
+  "technical_highlights": [
+    "Algorithm optimizations and complexity improvements",
+    "Memory usage reduction and garbage collection tuning",
+    "Database query optimization and caching strategies",
+    "Network request optimization and connection pooling"
+  ],
+  "user_benefits": [
+    "Noticeably faster response times",
+    "Smoother user interface interactions",
+    "Reduced loading times and delays",
+    "Better performance on lower-end devices"
+  ],
+  "code_snippets": [
+    {{
+      "language": "relevant_language",
+      "code": "example of optimized code",
+      "description": "how the optimization improves performance"
+    }}
+  ],
+  "tags": ["performance", "speed", "optimization"],
+  "hashtags": ["#Performance", "#Speed", "#Optimization", "#Efficient"]
+}}
+
+Make performance improvements sound impressive and impactful - users love faster software!

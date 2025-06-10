@@ -1,0 +1,42 @@
+ai-github-explainer/
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── core/
+│   │   ├── __init__.py
+│   │   ├── config.py
+│   │   ├── github_collector.py
+│   │   ├── claude_client.py
+│   │   └── post_generator.py
+│   ├── templates/
+│   │   ├── template_feature.html
+│   │   ├── template_bugfix.html
+│   │   ├── template_security.html
+│   │   ├── template_performance.html
+│   │   └── template_general.html
+│   ├── prompts/
+│   │   └── main_prompt.txt          
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── template_selector.py
+│   │   ├── data_processor.py
+│   │   ├── html_generator.py
+│   │   └── chart_generator.py
+│   └── models/
+│       ├── __init__.py
+│       ├── commit.py
+│       └── post.py
+├── data/
+│   ├── commits/
+│   │   ├── hourly/
+│   │   └── processed/
+│   └── posts/
+│       ├── 2h/
+│       └── 24h/
+├── logs/
+├── static/
+├── requirements.txt
+├── .env.example
+├── scheduler.py
+├── run.py
+└── README.md
