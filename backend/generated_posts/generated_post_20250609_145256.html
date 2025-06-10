@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QF Network Social Posts</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f0f2f5;
+            color: #1c1e21;
+        }
+
+        .post {
+            background: white;
+            max-width: 520px;
+            margin: 30px auto;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            overflow: hidden;
+            border: 1px solid #dadde1;
+        }
+
+        .post-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid #dadde1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .post-info {
+            flex: 1;
+        }
+
+        .username {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .timestamp {
+            color: #65676b;
+            font-size: 13px;
+        }
+
+        .platform-badge {
+            background: #e4e6ea;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: #65676b;
+        }
+
+        .post-content {
+            padding: 16px;
+        }
+
+        .post-text {
+            line-height: 1.34;
+            margin-bottom: 12px;
+        }
+
+        .post-image-container {
+            margin: 12px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .post-image-container:hover {
+            transform: scale(1.02);
+        }
+
+        .code-diff {
+            background: #0d1117;
+            color: #e6edf3;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            position: relative;
+            overflow-x: auto;
+        }
+
+        .diff-header {
+            color: #7d8590;
+            margin-bottom: 8px;
+            font-size: 11px;
+        }
+
+        .diff-removed {
+            background: #490202;
+            color: #f85149;
+            display: block;
+            padding: 2px 4px;
+            margin: 1px 0;
+        }
+
+        .diff-added {
+            background: #0f5132;
+            color: #56d364;
+            display: block;
+            padding: 2px 4px;
+            margin: 1px 0;
+        }
+
+        .file-tree {
+            background: #f6f8fa;
+            border: 1px solid #d1d9e0;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .folder {
+            color: #0969da;
+            font-weight: 600;
+        }
+
+        .file {
+            color: #656d76;
+            margin-left: 16px;
+        }
+
+        .file.modified {
+            color: #bf8700;
+        }
+
+        .file.added {
+            color: #1a7f37;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin: 12px 0;
+        }
+
+        .stat-box {
+            background: #f0f2f5;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1877f2;
+            margin: 0;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #65676b;
+            margin: 4px 0 0 0;
+        }
+
+        .commit-visual {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .commit-hash {
+            font-family: monospace;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .commit-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .interactive-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #1877f2;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e4e6ea;
+            color: #1c1e21;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .engagement-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 16px;
+            border-top: 1px solid #dadde1;
+            background: #f7f8fa;
+        }
+
+        .engagement-btn {
+            background: none;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #65676b;
+            transition: background 0.2s;
+        }
+
+        .engagement-btn:hover {
+            background: #e4e6ea;
+        }
+
+        .hashtag {
+            color: #1877f2;
+            font-weight: 500;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 12px 0;
+        }
+
+        .component {
+            display: inline-block;
+            background: white;
+            border: 2px solid #007bff;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin: 4px;
+            font-weight: 600;
+            color: #007bff;
+            min-width: 100px;
+        }
+
+        .arrow {
+            font-size: 24px;
+            color: #007bff;
+            margin: 0 8px;
+        }
+
+        .progress-visual {
+            background: linear-gradient(90deg, #e9ecef 0%, #e9ecef 60%, #28a745 60%, #28a745 100%);
+            height: 8px;
+            border-radius: 4px;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: -20px;
+            right: 0;
+            font-size: 12px;
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .post {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        .clickable {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .clickable:hover {
+            background: #f0f2f5;
+        }
+    </style>
+</head>
+<body>
+
+Here are 3 posts based on the provided data:
+
+<div class="post">
+    <div class="post-header">
+        <div class="profile-pic">QF</div>
+        <div class="post-info">
+            <div class="username">Quantum Fusion</div>
+            <div class="timestamp">2 hours ago</div>
+        </div>
+        <div class="platform-badge">GitHub</div>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-text">
+            🎉 <strong>MAJOR: WebRTC Light Client Support Added!</strong><br><br>
+            Fixed missing events issue in recent events section. Events were being filtered out when they had same hash but different nonces/blocks. Relaxed filtering to avoid missing real events 🔄 <code>1026ec34</code>
+        </div>
+        
+        <div class="post-image-container">
+            <div class="commit-visual" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="commit-hash">1026ec34</div>
+                <div class="commit-title">Update comment on missing events fix</div>
+                <div style="font-size: 14px; opacity: 0.9;">
+                    📁 1 file changed • +15 -4 lines
+                </div>
+            </div>
+        </div>
+
+        <div class="code-diff">
+            <div class="diff-header">packages/react-hooks/src/ctx/BlockEvents.tsx</div>
+            <span class="diff-added">+ Better deduplication with preserved event tracking</span>
+            <span class="diff-removed">- Old filtering that missed some events</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">+15</div>
+                <p class="stat-label">Lines Added</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">-4</div>
+                <p class="stat-label">Lines Removed</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">1</div>
+                <p class="stat-label">File Changed</p>
+            </div>
+        </div>
+
+        <div class="interactive-buttons">
+            <button class="btn btn-primary">View Commit</button>
+            <button class="btn btn-secondary">View Changes</button>
+        </div>
+
+        <div style="margin-top: 12px;">
+            <span class="hashtag">#WebRTC</span> <span class="hashtag">#Performance</span>
+        </div>
+    </div>
+    
+    <div class="engagement-bar">
+        <button class="engagement-btn">👍 Like</button>
+        <button class="engagement-btn">💬 Comment</button>
+        <button class="engagement-btn">🔄 Share</button>
+    </div>
+</div>
+
+<div class="post">
+    <div class="post-header">
+        <div class="profile-pic">QF</div>
+        <div class="post-info">
+            <div class="username">Quantum Fusion</div>
+            <div class="timestamp">2 hours ago</div>
+        </div>
+        <div class="platform-badge">GitHub</div>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-text">
+            🎉 <strong>MAJOR: Smart Contract Storage Improvements</strong><br><br>
+            Added StorageValue struct with owner tracking for smart contract storage. Improved data management and security 🔒 <code>8504db22</code>
+        </div>
+        
+        <div class="post-image-container">
+            <div class="commit-visual" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="commit-hash">8504db22</div>
+                <div class="commit-title">Use StorageValue instead of CodeStorageValue</div>
+                <div style="font-size: 14px; opacity: 0.9;">
+                    📁 2 files changed • +15 -14 lines
+                </div>
+            </div>
+        </div>
+
+        <div class="code-diff">
+            <div class="diff-header">pallets/qf-polkavm/src/lib.rs</div>
+            <span class="diff-added">+ Added StorageValue with owner tracking</span>
+            <span class="diff-removed">- Removed legacy CodeStorageValue implementation</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">+15</div>
+                <p class="stat-label">Lines Added</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">-14</div>
+                <p class="stat-label">Lines Removed</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">2</div>
+                <p class="stat-label">Files Changed</p>
+            </div>
+        </div>
+
+        <div class="interactive-buttons">
+            <button class="btn btn-primary">View Commit</button>
+            <button class="btn btn-secondary">View Changes</button>
+        </div>
+
+        <div style="margin-top: 12px;">
+            <span class="hashtag">#Storage</span> <span class="hashtag">#SmartContracts</span>
+        </div>
+    </div>
+    
+    <div class="engagement-bar">
+        <button class="engagement-btn">👍 Like</button>
+        <button class="engagement-btn">💬 Comment</button>
+        <button class="engagement-btn">🔄 Share</button>
+    </div>
+</div>
+
+<div class="post">
+    <div class="post-header">
+        <div class="profile-pic">QF</div>
+        <div class="post-info">
+            <div class="username">Quantum Fusion</div>
+            <div class="timestamp">2 hours ago</div>
+        </div>
+        <div class="platform-badge">GitHub</div>
+    </div>
+    
+    <div class="post-content">
+        <div class="post-text">
+            🎉 <strong>MAJOR: Print Function Support in PVM</strong><br><br>
+            Enabled print host function in PolkaVM with max log length limits and proper memory handling 🖨️ <code>44761c3b</code>
+        </div>
+        
+        <div class="post-image-container">
+            <div class="commit-visual" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="commit-hash">44761c3b</div>
+                <div class="commit-title">Enable print host function in PVM</div>
+                <div style="font-size: 14px; opacity: 0.9;">
+                    📁 8 files changed • +129 -78 lines
+                </div>
+            </div>
+        </div>
+
+        <div class="code-diff">
+            <div class="diff-header">pallets/qf-polkavm/src/lib.rs</div>
+            <span class="diff-added">+ Added print function with memory safety checks</span>
+            <span class="diff-removed">- Removed old logging implementation</span>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <div class="stat-number">+129</div>
+                <p class="stat-label">Lines Added</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">-78</div>
+                <p class="stat-label">Lines Removed</p>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">8</div>
+                <p class="stat-label">Files Changed</p>
+            </div>
+        </div>
+
+        <div class="interactive-buttons">
+            <button class="btn btn-primary">View Commit</button>
+            <button class="btn btn-secondary">View Changes</button>
+        </div>
+
+        <div style="margin-top: 12px;">
+            <span class="hashtag">#PolkaVM</span> <span class="hashtag">#Development</span>
+        </div>
+    </div>
+    
+    <div class="engagement-bar">
+        <button class="engagement-btn">👍 Like</button>
+        <button class="engagement-btn">💬 Comment</button>
+        <button class="engagement-btn">🔄 Share</button>
+    </div>
+</div>
+
+    <script>
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 100);
+            });
+        });
+
+        document.querySelectorAll('.post-image-container').forEach(container => {
+            container.addEventListener('click', function() {
+                this.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+            });
+        });
+    </script>
+</body>
+</html>
